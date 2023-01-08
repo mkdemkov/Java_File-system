@@ -1,4 +1,6 @@
-package org.file_system;
+package org.file_system.FilesProcessing;
+
+import org.file_system.Constants.Constants;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -17,16 +19,22 @@ public class FileParser {
 
     private ArrayList<File> files; // все текстовые файлы
 
+    /**
+     * конструктор класса, задающий условие отбора файлов
+     */
     public FileParser() {
         this.directory = new File("files");
         // критерий, по которому берем только файлы txt
         this.textFilter = (dir, name) -> name.toLowerCase().endsWith(".txt");
     }
 
+    /**
+     * метод, который ищет все текстовые файлы и выводит их названия
+     */
     public void findAllFiles() {
         ArrayList<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles(textFilter))));
         this.files = files; // записываем все текстовые файлы в поле класса
-        System.out.println("Были найдены следующие файлы:");
+        System.out.println(Constants.foundThisFiles);
         int counter = 1;
         try {
             if (!files.isEmpty()) {
@@ -36,19 +44,22 @@ public class FileParser {
                 System.out.println();
             }
         } catch (NullPointerException exception) {
-            System.out.println("Файлов не найдено!");
+            System.out.println(Constants.filesNotFound);
         }
     }
 
+    /**
+     * вывод содержимого файлов на экран
+     */
     public void printAllFiles() {
         for (File file : files) {
             try {
                 System.out.printf("Содержимое файла " + file.getName() + ":\n");
                 List<String> text = Files.readAllLines(file.toPath());
                 text.forEach((System.out::println));
-                System.out.println("-----------------------------");
+                System.out.println(Constants.demeliter);
             } catch (IOException exception) {
-                System.out.println("Что-то пошло не так при работе с файлом");
+                System.out.println(Constants.somethingWentWrong);
             }
         }
     }
